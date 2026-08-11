@@ -1,0 +1,115 @@
+---
+import { site } from "../site.config";
+import Logo from "./Logo.astro";
+import type { Translations } from "../i18n";
+
+interface Props {
+  locale: "es" | "en";
+  dict: Translations;
+  alternate: string;
+}
+
+const { locale, dict, alternate } = Astro.props;
+
+// Anclas con raíz según idioma, para funcionar también desde páginas de servicio
+const root = locale === "es" ? "" : "/en";
+const links = [
+  { href: `${root}/#servicios`, label: dict.nav.services },
+  { href: `${root}/#sobre-mi`, label: dict.nav.about },
+  { href: `${root}/#contacto`, label: dict.nav.contact },
+];
+const brandHref = locale === "es" ? "/" : "/en/";
+const navLabel = dict.nav.navLabel;
+---
+
+<header class="fixed inset-x-0 top-0 z-50 border-b border-hairline bg-ivory/85 backdrop-blur-md">
+  <nav
+    class="mx-auto flex h-16 max-w-6xl items-center justify-between px-6 lg:px-8"
+    aria-label={navLabel}
+  >
+    <a
+      href={brandHref}
+      class="inline-flex items-center text-ink transition-colors duration-300 hover:text-bronze"
+      aria-label={site.name}
+    >
+      <Logo size={34} wordmarkClass="hidden font-serif text-lg font-medium tracking-wide sm:block" />
+    </a>
+
+    <div class="flex items-center gap-5">
+      <ul class="hidden items-center gap-7 md:flex">
+        {
+          links.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="relative text-sm text-muted transition-colors duration-300 hover:text-ink after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-bronze after:transition-all after:duration-300 hover:after:w-full"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="flex items-center gap-3">
+        <!-- Toggle de tema (oscuro por defecto) -->
+        <button
+          id="theme-toggle"
+          type="button"
+          aria-label={dict.nav.theme}
+          class="inline-flex h-9 w-9 items-center justify-center border border-ink/15 text-muted transition-all duration-300 hover:border-bronze hover:text-bronze"
+        >
+          <!-- Luna: visible en modo claro -->
+          <svg
+            class="block h-4 w-4 dark:hidden"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+          <!-- Sol: visible en modo oscuro -->
+          <svg
+            class="hidden h-4 w-4 dark:block"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+          </svg>
+        </button>
+
+        <!-- Switcher de idioma -->
+        <a
+          href={alternate}
+          aria-label={dict.nav.switchTo}
+          class="group inline-flex items-center gap-1.5 border border-ink/15 px-3 py-2 text-xs font-medium tracking-[0.18em] uppercase transition-all duration-300 hover:border-bronze hover:text-bronze"
+        >
+          <span class={locale === "es" ? "text-bronze" : "text-muted group-hover:text-bronze"}>ES</span>
+          <span class="text-muted/50">/</span>
+          <span class={locale === "en" ? "text-bronze" : "text-muted group-hover:text-bronze"}>EN</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<script>
+  const toggle = document.getElementById("theme-toggle");
+  toggle?.addEventListener("click", () => {
+    const root = document.documentElement;
+    const dark = root.classList.toggle("dark");
+    try {
+      localStorage.setItem("theme", dark ? "dark" : "light");
+    } catch (e) {}
+  });
+</script>

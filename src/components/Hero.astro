@@ -1,0 +1,57 @@
+---
+import type { Translations } from "../i18n";
+
+interface Props {
+  dict: Translations;
+}
+
+const { dict } = Astro.props;
+---
+
+<section class="relative overflow-hidden">
+  <!-- Fondo decorativo sutil -->
+  <div
+    class="pointer-events-none absolute inset-0"
+    aria-hidden="true"
+  >
+    <div class="absolute -top-32 right-[-10%] h-[480px] w-[480px] rounded-full bg-bronze/[0.07] blur-3xl"></div>
+    <div class="absolute bottom-[-20%] left-[-8%] h-[380px] w-[380px] rounded-full bg-ink/[0.04] blur-3xl"></div>
+    <div class="absolute inset-6 border border-hairline md:inset-10"></div>
+  </div>
+
+  <div class="relative mx-auto flex min-h-[92vh] max-w-6xl flex-col items-center justify-center px-6 py-32 text-center lg:px-8">
+    <p class="eyebrow reveal">{dict.hero.eyebrow}</p>
+
+    <h1
+      class="reveal mt-8 max-w-4xl font-serif text-5xl leading-[1.05] font-medium tracking-tight text-balance sm:text-6xl md:text-7xl lg:text-8xl"
+      style="transition-delay: 80ms"
+    >
+      {dict.hero.titleTop}
+      <em class="text-bronze">{dict.hero.titleAccent}</em>
+      <br class="hidden sm:block" />
+      {dict.hero.titleBottom}
+    </h1>
+
+    <p
+      class="reveal mt-8 max-w-xl text-lg leading-relaxed font-light text-muted md:text-xl"
+      style="transition-delay: 160ms"
+    >
+      {dict.hero.subtitle}
+    </p>
+
+    <div
+      class="reveal mt-12 flex flex-col items-center gap-4 sm:flex-row"
+      style="transition-delay: 240ms"
+    >
+      <a href="#contacto" class="btn btn-dark">{dict.hero.ctaPrimary}</a>
+      <a href="#servicios" class="btn btn-outline">{dict.hero.ctaSecondary}</a>
+    </div>
+
+    <p
+      class="reveal mt-10 text-[11px] font-medium tracking-[0.28em] uppercase text-muted/80"
+      style="transition-delay: 320ms"
+    >
+      {dict.hero.note}
+    </p>
+  </div>
+</section>

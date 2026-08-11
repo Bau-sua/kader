@@ -1,0 +1,161 @@
+---
+import Contact from "./Contact.astro";
+import type { Translations } from "../i18n";
+
+interface Props {
+  locale: "es" | "en";
+  dict: Translations;
+  slug: string;
+}
+
+const { locale, dict, slug } = Astro.props;
+const item = dict.services.items.find((s) => s.slug === slug);
+const page = dict.servicePages[slug];
+
+if (!item || !page) {
+  throw new Error(`Falta contenido para el servicio "${slug}"`);
+}
+
+// La sección de servicios mantiene el id "servicios" en ambos idiomas
+const backPath = locale === "es" ? "/#servicios" : "/en/#servicios";
+const checkIcon =
+  '<svg class="h-4 w-4 shrink-0 text-bronze" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+---
+
+<div class="border-t border-hairline">
+  <div class="mx-auto max-w-6xl px-6 pt-24 md:pt-32 lg:px-8">
+    <!-- Breadcrumb -->
+    <a
+      href={backPath}
+      class="reveal group inline-flex items-center gap-2 text-sm text-muted transition-colors duration-300 hover:text-bronze"
+    >
+      <svg
+        class="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M19 12H5M12 19l-7-7 7-7" />
+      </svg>
+      {dict.servicePage.back}
+    </a>
+
+    <!-- Encabezado -->
+    <header class="mt-10 max-w-3xl">
+      <p class="eyebrow reveal">{item.title}</p>
+      <h1 class="reveal mt-6 font-serif text-4xl leading-tight font-medium text-balance md:text-6xl" style="transition-delay: 80ms">
+        {item.title}
+      </h1>
+      {
+        page.intro.map((paragraph, i) => (
+          <p class="reveal mt-6 text-lg leading-relaxed font-light text-muted" style={{ transitionDelay: `${160 + i * 80}ms` }}>
+            {paragraph}
+          </p>
+        ))
+      }
+    </header>
+
+    <div class="mt-16 grid gap-16 lg:grid-cols-[7fr_5fr] lg:items-start">
+      <!-- Contenido principal -->
+      <div>
+        <!-- Qué incluye -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-medium md:text-3xl">{page.featuresLabel}</h2>
+          <ul class="mt-8 grid gap-x-10 gap-y-4 sm:grid-cols-2">
+            {
+              page.features.map((feature) => (
+                <li class="flex items-start gap-3 text-sm leading-relaxed font-light text-ink-soft">
+                  <Fragment set:html={checkIcon} />
+                  <span>{feature}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+
+        <!-- Proceso -->
+        <section class="reveal mt-20">
+          <h2 class="font-serif text-2xl font-medium md:text-3xl">{page.processLabel}</h2>
+          <ol class="mt-8 space-y-0 border-l border-hairline">
+            {
+              page.process.map((step, i) => (
+                <li class="relative pb-10 pl-8 last:pb-0">
+                  <span
+                    class="absolute top-0 -left-[5px] flex h-2.5 w-2.5 items-center justify-center rounded-full bg-ivory ring-1 ring-bronze"
+                    aria-hidden="true"
+                  ></span>
+                  <span class="font-serif text-sm text-bronze" aria-hidden="true">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 class="mt-2 font-serif text-xl font-medium">{step.title}</h3>
+                  <p class="mt-2 text-sm leading-relaxed font-light text-muted">{step.description}</p>
+                </li>
+              ))
+            }
+          </ol>
+        </section>
+      </div>
+
+      <!-- Aside de conversión: disponibilidad + gancho -->
+      <aside class="reveal lg:sticky lg:top-24" style="transition-delay: 240ms">
+        <div class="border border-hairline bg-ivory-deep/50 p-8">
+          <p class="inline-flex items-center gap-2 text-[11px] font-medium tracking-[0.28em] uppercase text-bronze">
+            <span class="relative flex h-2 w-2" aria-hidden="true">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-bronze opacity-40"></span>
+              <span class="relative inline-flex h-2 w-2 rounded-full bg-bronze"></span>
+            </span>
+            {page.availability}
+          </p>
+
+          <p class="mt-6 font-serif text-xl leading-snug text-ink-soft italic md:text-2xl">
+            “{page.hook}”
+          </p>
+
+          <div class="my-8 h-px bg-hairline" aria-hidden="true"></div>
+
+          <ul class="space-y-3.5">
+            {
+              dict.servicePage.reassurance.map((item) => (
+                <li class="flex items-start gap-3 text-sm font-light text-muted">
+                  <Fragment set:html={checkIcon} />
+                  <span>{item}</span>
+                </li>
+              ))
+            }
+          </ul>
+
+          <a
+            href="#contacto"
+            class="btn btn-dark mt-8 w-full"
+          >
+            {dict.servicePage.consultCta}
+            <svg
+              class="h-4 w-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z" />
+            </svg>
+          </a>
+          <p class="mt-4 text-center text-[11px] font-light text-muted/80">
+            {dict.contact.privacy}
+          </p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Formulario de contacto con mensaje pre-cargado -->
+  <div class="mt-20">
+    <Contact dict={dict} serviceName={item.title} prefill={page.prefill} />
+  </div>
+</div>

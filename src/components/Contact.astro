@@ -1,0 +1,157 @@
+---
+import { site } from "../site.config";
+import type { Translations } from "../i18n";
+
+interface Props {
+  dict: Translations;
+  serviceName?: string; // nombre del servicio (para el asunto del mensaje)
+  prefill?: string; // mensaje pre-cargado en el textarea
+}
+
+const { dict, serviceName, prefill } = Astro.props;
+const hasKey = site.web3formsAccessKey.length > 0;
+const subject = serviceName
+  ? `[${site.name}] Consulta sobre ${serviceName}`
+  : `[${site.name}] Nuevo mensaje`;
+---
+
+<section id="contacto" class="scroll-mt-20 border-t border-hairline">
+  <div class="mx-auto max-w-3xl px-6 py-24 md:py-32 lg:px-8">
+    <div class="text-center">
+      <p class="eyebrow reveal justify-center">{dict.contact.eyebrow}</p>
+      <h2 class="reveal mt-6 font-serif text-4xl leading-tight font-medium text-balance md:text-5xl" style="transition-delay: 80ms">
+        {dict.contact.title}
+      </h2>
+      <p class="reveal mx-auto mt-5 max-w-lg text-lg leading-relaxed font-light text-muted" style="transition-delay: 160ms">
+        {dict.contact.subtitle}
+      </p>
+    </div>
+
+    <div class="reveal mt-14" style="transition-delay: 240ms">
+      {
+        hasKey ? (
+          <form
+            id="contact-form"
+            action="https://api.web3forms.com/submit"
+            method="POST"
+            class="space-y-10"
+            data-send={dict.contact.send}
+            data-sending={dict.contact.sending}
+            data-success={dict.contact.success}
+            data-error={dict.contact.error}
+          >
+            <!-- Clave pública de Web3Forms -->
+            <input type="hidden" name="access_key" value={site.web3formsAccessKey} />
+            <input type="hidden" name="subject" value={subject} />
+            <input type="checkbox" name="botcheck" class="hidden" />
+
+            <div class="grid gap-10 sm:grid-cols-2">
+              <div>
+                <label for="name" class="field-label">{dict.contact.name}</label>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  required
+                  autocomplete="name"
+                  placeholder={dict.contact.namePlaceholder}
+                  class="field-input"
+                />
+              </div>
+              <div>
+                <label for="email" class="field-label">{dict.contact.email}</label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  autocomplete="email"
+                  placeholder={dict.contact.emailPlaceholder}
+                  class="field-input"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label for="message" class="field-label">{dict.contact.message}</label>
+              <textarea
+                id="message"
+                name="message"
+                required
+                rows="5"
+                placeholder={dict.contact.messagePlaceholder}
+                class="field-input resize-none"
+              >{prefill ?? ""}</textarea>
+            </div>
+
+            <div class="flex flex-col items-center gap-4 pt-2">
+              <button
+                type="submit"
+                id="contact-submit"
+                class="btn btn-dark w-full sm:w-auto"
+              >
+                {dict.contact.send}
+              </button>
+
+              <p id="contact-status" class="hidden max-w-md text-center text-sm leading-relaxed" role="status" aria-live="polite"></p>
+
+              <p class="text-xs font-light text-muted/80">{dict.contact.privacy}</p>
+            </div>
+          </form>
+        ) : (
+          <div class="border border-bronze/40 bg-ivory-deep/50 p-8 text-center">
+            <p class="text-sm font-light text-ink-soft">{dict.contact.missingKey}</p>
+            <a
+              href={`mailto:${site.email}`}
+              class="mt-4 inline-block text-sm font-medium text-bronze underline decoration-bronze/40 underline-offset-4 hover:decoration-bronze"
+            >
+              {site.email}
+            </a>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById("contact-form") as HTMLFormElement | null;
+  if (form) {
+    const submitBtn = document.getElementById("contact-submit") as HTMLButtonElement;
+    const status = document.getElementById("contact-status") as HTMLParagraphElement;
+    const sendingLabel = form.dataset.sending ?? "...";
+    const sendLabel = form.dataset.send ?? "Send";
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = sendingLabel;
+
+      try {
+        const response = await fetch(form.action, {
+          method: "POST",
+          body: new FormData(form),
+          headers: { Accept: "application/json" },
+        });
+        const result = await response.json();
+        if (result.success) {
+          form.reset();
+          showStatus(status, form.dataset.success ?? "✓", "text-bronze");
+        } else {
+          showStatus(status, form.dataset.error ?? "Error", "text-red-800");
+        }
+      } catch {
+        showStatus(status, form.dataset.error ?? "Error", "text-red-800");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = sendLabel;
+      }
+    });
+
+    function showStatus(el: HTMLElement, message: string, colorClass: string) {
+      el.textContent = message;
+      el.className = `mt-0 ${colorClass}`;
+      el.classList.remove("hidden");
+    }
+  }
+</script>

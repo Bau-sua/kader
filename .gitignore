@@ -1,0 +1,34 @@
+# Local Pi runtime state
+.atl/
+
+# --- Build de Astro ---
+dist/
+.astro/
+
+# --- Dependencias ---
+node_modules/
+
+# --- Logs y debug ---
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+*.tsbuildinfo
+
+# --- Variables de entorno ---
+.env
+.env.*
+!.env.example
+
+# --- Vercel ---
+.vercel/
+
+# --- Editor / IDE ---
+.vscode/
+.idea/
+*.swp
+
+# --- Sistema operativo ---
+.DS_Store
+Thumbs.db

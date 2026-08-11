@@ -1,0 +1,66 @@
+---
+import { site } from "../site.config";
+import type { Translations } from "../i18n";
+
+interface Props {
+  dict: Translations;
+}
+
+const { dict } = Astro.props;
+---
+
+<section id="sobre-mi" class="scroll-mt-20 border-t border-hairline bg-ivory-deep/40">
+  <div class="mx-auto grid max-w-6xl gap-16 px-6 py-24 md:py-32 lg:grid-cols-[5fr_7fr] lg:items-center lg:px-8">
+    <!-- Bloque decorativo / foto -->
+    <div class="reveal relative order-2 mx-auto w-full max-w-sm lg:order-1">
+      <div class="absolute -inset-3 border border-bronze/40" aria-hidden="true"></div>
+      <div class="relative flex aspect-[4/5] items-center justify-center bg-ink">
+        <!-- TODO: Reemplazar por foto real <img src="/tu-foto.jpg" ...> -->
+        <span class="font-serif text-7xl text-ivory/90 italic" aria-hidden="true">
+          {site.initials[0]}
+        </span>
+        <span class="absolute bottom-4 left-4 text-[10px] tracking-[0.3em] uppercase text-ivory/60">
+          {site.role}
+        </span>
+      </div>
+    </div>
+
+    <!-- Texto -->
+    <div class="order-1 lg:order-2">
+      <p class="eyebrow reveal">{dict.about.eyebrow}</p>
+      <h2 class="reveal mt-6 font-serif text-4xl leading-tight font-medium text-balance md:text-5xl" style="transition-delay: 80ms">
+        {dict.about.title}
+      </h2>
+
+      {
+        dict.about.paragraphs.map((paragraph, i) => (
+          <p class="reveal mt-6 text-base leading-relaxed font-light text-muted md:text-lg" style={{ transitionDelay: `${160 + i * 80}ms` }}>
+            {paragraph}
+          </p>
+        ))
+      }
+
+      <p class="reveal mt-10 text-[11px] font-medium tracking-[0.28em] uppercase text-bronze" style="transition-delay: 320ms">
+        {dict.about.stackLabel}
+      </p>
+      <ul class="reveal mt-4 flex flex-wrap gap-2.5" style="transition-delay: 360ms">
+        {
+          dict.about.stack.map((tech) => (
+            <li
+              class="border border-ink/15 px-3.5 py-1.5 text-xs font-medium tracking-wide text-ink-soft transition-colors duration-300 hover:border-bronze hover:text-bronze"
+            >
+              {tech}
+            </li>
+          ))
+        }
+      </ul>
+
+      <a href="#contacto" class="reveal group mt-10 inline-flex items-center gap-2 text-sm font-medium tracking-wide" style="transition-delay: 420ms">
+        <span class="underline decoration-bronze decoration-1 underline-offset-8 transition-colors duration-300 group-hover:text-bronze">
+          {dict.about.cta}
+        </span>
+        <span class="transition-transform duration-300 group-hover:translate-x-1.5" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>

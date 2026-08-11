@@ -1,0 +1,25 @@
+---
+import Base from "../../layouts/Base.astro";
+import ServiceDetail from "../../components/ServiceDetail.astro";
+import { es } from "../../i18n";
+
+export function getStaticPaths() {
+  return es.services.items.map((item) => ({
+    params: { slug: item.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const dict = es;
+const page = dict.servicePages[slug!];
+---
+
+<Base
+  locale="es"
+  lang="es"
+  dict={dict}
+  title={page?.metaTitle}
+  description={page?.metaDescription}
+>
+  <ServiceDetail locale="es" dict={dict} slug={slug!} />
+</Base>
