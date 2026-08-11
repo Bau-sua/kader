@@ -23,28 +23,3 @@ src/
     ├── servicios/[slug].astro  # Páginas de servicio ES
     └── en/services/[slug].astro# Páginas de servicio EN
 ```
-
-## Desarrollo local
-
-```bash
-npm install
-npm run dev      # http://localhost:4321
-npm run build    # build estático en dist/
-```
-
-## Antes de publicar (TODO)
-
-1. **Identidad**: editá `src/site.config.ts` (nombre, iniciales, email, redes).
-2. **Textos y ganchos**: editá `src/i18n/index.ts` — buscá `hook` para ajustar los mensajes de escasez por servicio.
-3. **Formulario**:
-   - Entrá a https://web3forms.com, poné tu email y recibís tu Access Key (gratis, 250 envíos/mes).
-   - Copiá `.env.example` a `.env` y pegá la key en `PUBLIC_WEB3FORMS_ACCESS_KEY`.
-4. **Foto**: reemplazá el bloque del monograma en `src/components/About.astro` por un `<img>`.
-5. **Dominio**: actualizá `site` en `astro.config.mjs` (el dominio real de Vercel).
-
-## Deploy a Vercel (gratis)
-
-1. Creá un repo en GitHub y subí esta carpeta (`git init && git add . && git commit -m "init" && git push`).
-2. En [vercel.com](https://vercel.com) → *Add New Project* → importá el repo.
-3. Vercel detecta Astro automáticamente. En *Environment Variables* agregá `PUBLIC_WEB3FORMS_ACCESS_KEY`.
-4. Deploy. Cada push a `main` publica automáticamente.
