@@ -153,7 +153,7 @@ export const es: Translations = {
     ],
     stackLabel: "Stack habitual",
     stack: ["TypeScript", "Python", "Node.js", "React", "PostgreSQL", "langGraph"],
-    cta: "Contame qué tarea te está robando horas",
+    cta: "Contame qué tarea te está quitando horas",
   },
   contact: {
     eyebrow: "Contacto",
@@ -435,7 +435,7 @@ export const en: Translations = {
     ],
     stackLabel: "Usual stack",
     stack: ["TypeScript", "Python", "Node.js", "React", "PostgreSQL", "langGraph"],
-    cta: "Tell me which task is stealing your hours",
+    cta: "Tell me what task is taking up hours",
   },
   contact: {
     eyebrow: "Contact",
