@@ -184,7 +184,7 @@ export const es: Translations = {
   },
   servicePages: {
     "sitios-web": {
-      metaTitle: "Sitios Web a medida — Bautista Suarez",
+      metaTitle: "Sitios Web a medida — Kader",
       metaDescription:
         "Landings y sitios corporativos con diseño premium, SEO y velocidad de carga. Una web clara, rápida y pensada para convertir visitas en clientes.",
       intro: [
@@ -228,7 +228,7 @@ export const es: Translations = {
       prefill: "Hola, me interesa un sitio web. ¿Podemos conversar sobre mi proyecto?",
     },
     "aplicaciones-web": {
-      metaTitle: "Aplicaciones Web a medida — Bautista Suarez",
+      metaTitle: "Aplicaciones Web a medida — Kader",
       metaDescription:
         "Dashboards y herramientas internas que ordenan tu operación y ahorran horas de trabajo. Software a medida que se adapta a cómo trabaja tu equipo.",
       intro: [
@@ -272,7 +272,7 @@ export const es: Translations = {
       prefill: "Hola, tengo un proceso que me gustaría resolver con una aplicación web. ¿Podemos charlar?",
     },
     "apis-e-integraciones": {
-      metaTitle: "APIs e Integraciones — Bautista Suarez",
+      metaTitle: "APIs e Integraciones — Kader",
       metaDescription:
         "Conecto sistemas: pagos, envíos, CRMs y más. APIs bien documentadas, seguras y con monitoreo. Te digo si es viable antes de arrancar.",
       intro: [
@@ -316,7 +316,7 @@ export const es: Translations = {
       prefill: "Hola, necesito conectar dos sistemas. ¿Me ayudás a ver si es viable?",
     },
     "automatizacion-ia": {
-      metaTitle: "Automatización e IA — Bautista Suarez",
+      metaTitle: "Automatización e IA — Kader",
       metaDescription:
         "Automatizo procesos repetitivos e integro IA. Pilotos limitados por mes: escribime hoy.",
       intro: [
@@ -466,7 +466,7 @@ export const en: Translations = {
   },
   servicePages: {
     websites: {
-      metaTitle: "Custom Websites — Bautista Suarez",
+      metaTitle: "Custom Websites — Kader",
       metaDescription:
         "Premium-designed landing pages and corporate sites with SEO and fast load times. A clear, fast website built to turn visitors into clients.",
       intro: [
@@ -510,7 +510,7 @@ export const en: Translations = {
       prefill: "Hi, I'm interested in a website. Can we talk about my project?",
     },
     "web-applications": {
-      metaTitle: "Custom Web Applications — Bautista Suarez",
+      metaTitle: "Custom Web Applications — Kader",
       metaDescription:
         "Dashboards and internal tools that streamline your operations and save hours of work. Custom software that adapts to how your team works.",
       intro: [
@@ -554,7 +554,7 @@ export const en: Translations = {
       prefill: "Hi, I have a process I'd like to solve with a web application. Can we talk?",
     },
     "apis-integrations": {
-      metaTitle: "APIs & Integrations — Bautista Suarez",
+      metaTitle: "APIs & Integrations — Kader",
       metaDescription:
         "I connect systems: payments, shipping, CRMs and more. Well-documented, secure APIs with monitoring. I'll tell you if it's viable before we start.",
       intro: [
@@ -598,7 +598,7 @@ export const en: Translations = {
       prefill: "Hi, I need to connect two systems. Can you help me check if it's viable?",
     },
     "automation-ai": {
-      metaTitle: "Automation & AI — Bautista Suarez",
+      metaTitle: "Automation & AI — Kader",
       metaDescription:
         "I automate repetitive processes and integrate AI. Limited pilots each month: write today.",
       intro: [
@@ -648,3 +648,20 @@ export const en: Translations = {
     social: "Follow me",
   },
 };
+
+/* ================================================================
+ *  Utilidades de ruteo i18n
+ *  Las listas de servicios tienen el mismo orden en ambos idiomas,
+ *  así que el slug equivalente se obtiene por índice.
+ * ================================================================ */
+
+const esServiceSlugs = es.services.items.map((s) => s.slug);
+const enServiceSlugs = en.services.items.map((s) => s.slug);
+
+/** Devuelve el slug equivalente en el otro idioma (o el mismo si no existe). */
+export function alternateServiceSlug(slug: string, locale: "es" | "en"): string {
+  const from = locale === "es" ? esServiceSlugs : enServiceSlugs;
+  const to = locale === "es" ? enServiceSlugs : esServiceSlugs;
+  const index = from.indexOf(slug);
+  return index === -1 ? slug : to[index];
+}

@@ -1,0 +1,57 @@
+---
+import Base from "../layouts/Base.astro";
+import { es } from "../i18n";
+
+const dict = es;
+---
+
+<Base
+  locale="es"
+  lang="es"
+  dict={dict}
+  title="Página no encontrada — Kader"
+  description="La página que buscás no existe o fue movida. Volvé al inicio o escribime y lo resolvemos."
+>
+  <section class="relative overflow-hidden">
+    <!-- Fondo decorativo sutil (igual que el hero) -->
+    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+      <div class="absolute -top-32 right-[-10%] h-[480px] w-[480px] rounded-full bg-bronze/[0.07] blur-3xl"></div>
+      <div class="absolute bottom-[-20%] left-[-8%] h-[380px] w-[380px] rounded-full bg-ink/[0.04] blur-3xl"></div>
+      <div class="absolute inset-6 border border-hairline md:inset-10"></div>
+    </div>
+
+    <div class="relative mx-auto flex min-h-[85vh] max-w-6xl flex-col items-center justify-center px-6 py-32 text-center lg:px-8">
+      <p class="eyebrow reveal">Error 404</p>
+
+      <p
+        class="reveal mt-10 font-serif text-[8rem] leading-none font-medium text-bronze/20 select-none md:text-[11rem]"
+        aria-hidden="true"
+        style="transition-delay: 80ms"
+      >
+        404
+      </p>
+
+      <h1
+        class="reveal mt-6 max-w-3xl font-serif text-4xl leading-tight font-medium text-balance md:text-6xl"
+        style="transition-delay: 160ms"
+      >
+        Página no encontrada
+      </h1>
+
+      <p
+        class="reveal mt-6 max-w-xl text-lg leading-relaxed font-light text-muted md:text-xl"
+        style="transition-delay: 240ms"
+      >
+        La página que buscás no existe o fue movida. Si llegaste acá desde un enlace, escribime y lo revisamos.
+      </p>
+
+      <div
+        class="reveal mt-12 flex flex-col items-center gap-4 sm:flex-row"
+        style="transition-delay: 320ms"
+      >
+        <a href="/" class="btn btn-dark">Volver al inicio</a>
+        <a href="/#servicios" class="btn btn-outline">{dict.nav.services}</a>
+      </div>
+    </div>
+  </section>
+</Base>

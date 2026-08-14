@@ -2,7 +2,10 @@
 import "../styles/global.css";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import Analytics from "@vercel/analytics/astro";
+import SpeedInsights from "@vercel/speed-insights/astro";
 import type { Translations } from "../i18n";
+import type { JsonLd } from "../seo";
 
 interface Props {
   locale: "es" | "en";
@@ -10,11 +13,24 @@ interface Props {
   dict: Translations;
   title?: string;
   description?: string;
+  // Ruta equivalente en el otro idioma (para hreflang y el switcher).
+  // Si no se pasa, se asume que es la home del otro idioma.
+  alternatePath?: string;
+  // Datos estructurados (JSON-LD) específicos de la página
+  jsonLd?: JsonLd[];
 }
 
-const { locale, lang, dict, title, description } = Astro.props;
-const alternate = locale === "es" ? "/en/" : "/";
-const currentUrl = locale === "es" ? "/" : "/en/";
+const { locale, lang, dict, title, description, alternatePath, jsonLd } = Astro.props;
+
+// Canonical: siempre la URL real de la página actual (no hardcodeada)
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+
+// Alternate: ruta equivalente en el otro idioma
+const alternate = alternatePath ?? (locale === "es" ? "/en/" : "/");
+const alternateUrl = new URL(alternate, Astro.site);
+const esUrl = locale === "es" ? canonicalUrl : alternateUrl;
+const enUrl = locale === "en" ? canonicalUrl : alternateUrl;
+
 const htmlTitle = title ?? dict.meta.title;
 const htmlDescription = description ?? dict.meta.description;
 ---
@@ -39,9 +55,9 @@ const htmlDescription = description ?? dict.meta.description;
     </script>
 
     <!-- SEO / alternates -->
-    <link rel="canonical" href={new URL(currentUrl, Astro.site).href} />
-    <link rel="alternate" hreflang="es" href={new URL("/", Astro.site).href} />
-    <link rel="alternate" hreflang="en" href={new URL("/en/", Astro.site).href} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang="es" href={esUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
     <link rel="alternate" hreflang="x-default" href={new URL("/", Astro.site).href} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
@@ -51,7 +67,24 @@ const htmlDescription = description ?? dict.meta.description;
     <meta property="og:site_name" content={dict.meta.title} />
     <meta property="og:title" content={htmlTitle} />
     <meta property="og:description" content={htmlDescription} />
-    <meta property="og:url" content={new URL(currentUrl, Astro.site).href} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={new URL("/og-image.png", Astro.site).href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={dict.meta.title} />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={htmlTitle} />
+    <meta name="twitter:description" content={htmlDescription} />
+    <meta name="twitter:image" content={new URL("/og-image.png", Astro.site).href} />
+
+    <!-- Datos estructurados (schema.org) -->
+    {
+      jsonLd?.map((obj) => (
+        <script type="application/ld+json" set:html={JSON.stringify(obj)} />
+      ))
+    }
 
     <!-- Tipografías -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -67,6 +100,10 @@ const htmlDescription = description ?? dict.meta.description;
       <slot />
     </main>
     <Footer locale={locale} dict={dict} />
+
+    <!-- Analytics y Speed Insights de Vercel -->
+    <Analytics />
+    <SpeedInsights />
 
     <!-- Reveal on scroll (respetando prefers-reduced-motion) -->
     <script is:inline>

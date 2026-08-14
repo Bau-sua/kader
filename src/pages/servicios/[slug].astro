@@ -1,7 +1,8 @@
 ---
 import Base from "../../layouts/Base.astro";
 import ServiceDetail from "../../components/ServiceDetail.astro";
-import { es } from "../../i18n";
+import { es, alternateServiceSlug } from "../../i18n";
+import { serviceJsonLd, breadcrumbJsonLd } from "../../seo";
 
 export function getStaticPaths() {
   return es.services.items.map((item) => ({
@@ -12,6 +13,11 @@ export function getStaticPaths() {
 const { slug } = Astro.params;
 const dict = es;
 const page = dict.servicePages[slug!];
+const alternatePath = `/en/services/${alternateServiceSlug(slug!, "es")}/`;
+const jsonLd = [
+  serviceJsonLd("es", slug!, dict, Astro.site),
+  breadcrumbJsonLd("es", slug!, dict, Astro.site),
+];
 ---
 
 <Base
@@ -20,6 +26,8 @@ const page = dict.servicePages[slug!];
   dict={dict}
   title={page?.metaTitle}
   description={page?.metaDescription}
+  alternatePath={alternatePath}
+  jsonLd={jsonLd}
 >
   <ServiceDetail locale="es" dict={dict} slug={slug!} />
 </Base>

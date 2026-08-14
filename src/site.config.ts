@@ -13,13 +13,12 @@ export const site = {
   role: "Desarrollo de Software",
 
   // TODO: Datos de contacto reales
-  email: "hola@tudominio.com",
+  email: "kadersolution@gmail.com",
   location: "San Luis, Argentina",
 
-  // TODO: Redes sociales (dejá en "" lo que no uses)
+  // Redes sociales (dejá en "" lo que no uses)
   socials: {
-    linkedin: "",
-    instagram:"",
+    instagram: "https://www.instagram.com/kadersolution/",
   },
 
   // Clave pública de Web3Forms — configurar en .env (ver .env.example)
